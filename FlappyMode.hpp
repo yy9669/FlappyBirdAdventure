@@ -21,26 +21,25 @@ struct FlappyMode : Mode {
 
 	//----- game state -----
 
-	glm::vec2 court_radius = glm::vec2(7.0f, 5.0f);
-	glm::vec2 paddle_radius = glm::vec2(0.2f, 1.0f);
-	glm::vec2 ball_radius = glm::vec2(0.2f, 0.2f);
-
-	glm::vec2 left_paddle = glm::vec2(-court_radius.x + 0.5f, 0.0f);
-	glm::vec2 right_paddle = glm::vec2( court_radius.x - 0.5f, 0.0f);
-
-	glm::vec2 ball = glm::vec2(0.0f, 0.0f);
-	glm::vec2 ball_velocity = glm::vec2(-1.0f, 0.0f);
-
+	// flappy bird status
+	glm::vec2 bird_radius = glm::vec2(0.2f, 0.2f);
+	glm::vec2 bird = glm::vec2(-3.5f, 0.0f);
+	glm::vec2 bird_velocity = glm::vec2(0.0f, 1.0f);	
+	#define HEX_TO_U8VEC4( HX ) (glm::u8vec4( (HX >> 24) & 0xff, (HX >> 16) & 0xff, (HX >> 8) & 0xff, (HX) & 0xff ))
+	glm::u8vec4 mud = HEX_TO_U8VEC4(0xff0000ff);
+	glm::u8vec4 ice = HEX_TO_U8VEC4(0x888888ff);
+	glm::u8vec4 water = HEX_TO_U8VEC4(0x0000ffff);
+	glm::u8vec4 air = HEX_TO_U8VEC4(0xf3ffc6ff);
+	glm::u8vec4 environ_color[4]={mud,ice,water,air};
+	int environ=3;
+	float last_change_time=0;
+	float environ_time=0;
+	bool warning=false;
 	uint32_t left_score = 0;
-	uint32_t right_score = 0;
+	std::deque< glm::vec2 > bars;
+	std::deque< glm::vec2 > bars_radius;
 
-	float ai_offset = 0.0f;
-	float ai_offset_update = 0.0f;
-
-	//----- pretty rainbow trails -----
-
-	float trail_length = 1.3f;
-	std::deque< glm::vec3 > ball_trail; //stores (x,y,age), oldest elements first
+	glm::vec2 court_radius = glm::vec2(7.0f, 5.0f);
 
 	//----- opengl assets / helpers ------
 
